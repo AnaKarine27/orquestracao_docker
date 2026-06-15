@@ -1,6 +1,6 @@
 # Catálogo de Produtos - Docker Compose
 
-<img src="https://drive.google.com/uc?export=view&id=SEU_ID_AQUI" alt="Minha Imagem" width="300">
+<img src="https://drive.google.com/file/d/1yRmVl1xtsT9ZGX2UXlGrBZL32zlJz5Q0/view?usp=sharing" alt="Minha Imagem" width="300">
 
 ## | Sobre o Projeto
 Este é um sistema web de **Catálogo de Produtos** desenvolvido para o controle de estoque, criado como atividade prática da disciplina de Configuração de Servidores.
