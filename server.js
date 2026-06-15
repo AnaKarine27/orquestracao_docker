@@ -42,4 +42,28 @@ const initDb = async () => {
 
 initDb();
 
+app.get("/api/produtos", async (req, res) => {
+  try {
+    const result = await pool.query("SELECT * FROM produtos ORDER BY id DESC;");
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Erro ao buscar produtos" });
+  }
+});
+
+app.post("/api/produtos", async (req, res) => {
+  const { nome, preco, descricao, imagem_url } = req.body;
+  try {
+    const result = await pool.query(
+      "INSERT INTO produtos (nome, preco, descricao, imagem_url) VALUES ($1, $2, $3, $4) RETURNING *;",
+      [nome, preco, descricao, imagem_url],
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Erro ao cadastrar produto" });
+  }
+});
+
 app.listen(port, () => console.log(`Servidor rodando na porta ${port}`));
