@@ -80,5 +80,73 @@
       </div>
     </div>
   </body>
+  <script>
+      const form = document.getElementById("produtoForm");
+      const lista = document.getElementById("listaProdutos");
 
+      async function carregarProdutos() {
+        const res = await fetch("/api/produtos");
+        const produtos = await res.json();
+        lista.innerHTML = "";
+
+        if (produtos.length === 0) {
+          lista.innerHTML = `
+            <div class="empty">
+              <div class="empty-icon">↻</div>
+              Nenhum produto cadastrado.
+              <div class="divider"></div>
+            </div>`;
+          return;
+        }
+
+        produtos.forEach((p) => {
+          const imagem = p.imagem_url
+            ? p.imagem_url
+            : "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=400&auto=format&fit=crop";
+
+          lista.innerHTML += `
+            <div class="card">
+              <div class="card-img">
+                <img src="${imagem}" alt="${p.nome}" onerror="this.src='https://placehold.co/400x300?text=Sem+Imagem'" />
+              </div>
+              <div class="card-body">
+                <p class="card-name">${p.nome}</p>
+                <p class="card-desc">${p.descricao || "Nenhuma descrição disponível para este produto."}</p>
+                <div class="card-footer">
+                  <div>
+                    <span class="price-label">R$ </span><span class="price">${parseFloat(p.preco).toFixed(2)}</span>
+                  </div>
+                </div>
+              </div>
+            </div>`
+            ;
+        });
+      }
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const nome = document.getElementById("nome").value;
+        const preco = document.getElementById("preco").value;
+        const descricao = document.getElementById("descricao").value;
+        const imagem_url = document.getElementById("imagem_url").value;
+
+        const btn = form.querySelector("button");
+        const btnText = btn.innerHTML;
+        btn.innerHTML = "Aguardando...";
+        btn.disabled = true;
+
+        await fetch("/api/produtos", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ nome, preco, descricao, imagem_url }),
+        });
+
+        form.reset();
+        btn.innerHTML = btnText;
+        btn.disabled = false;
+        carregarProdutos();
+      });
+
+      carregarProdutos();
+    </script>
 </html>
